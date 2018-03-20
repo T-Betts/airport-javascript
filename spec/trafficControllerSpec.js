@@ -9,22 +9,21 @@ describe('Traffic Controller', function(){
 
   beforeEach(function(){
     tc = new TrafficController
-    // spyOnProperty(airbornePlane, 'inFlight', 'getter').and.returnValue(true);
-    // spyOnProperty(groundedPlane, 'inFlight', 'getter').and.returnValue(false);
-    // airbornePlane = jasmine.createSpyObj('airbornePlane');
-    // airbornePlane.inFlight.and.returnValue(true);
-    // groundedPlane = jasmine.createSpyObj('groundedPlane');
-    // groundedPlane.inFlight.and.returnValue(false);
+
+    //planes
     airbornePlane = jasmine.createSpyObj('airborneAirport',['changeFlightStatus']);
-    // emptyAirport.hasSpace.and.returnValue(true)
-    airbornePlane.inFlight = true
+    airbornePlane.inFlight = true;
     groundedPlane = jasmine.createSpyObj('groundedAirport',['changeFlightStatus']);
-    groundedPlane.inFlight = false
+    groundedPlane.inFlight = false;
+
+    //airports
     emptyAirport = jasmine.createSpyObj('emptyAirport',['hasSpace']);
     emptyAirport.hasSpace.and.returnValue(true);
-    emptyAirport.hangar = []
+    emptyAirport.hangar = [];
     fullAirport = jasmine.createSpyObj('fullAirport',['hasSpace']);
     fullAirport.hasSpace.and.returnValue(false);
+
+    //weather
     goodWeather = jasmine.createSpyObj('goodWeather',['isStormy']);
     goodWeather.isStormy.and.returnValue(false);
     badWeather = jasmine.createSpyObj('badWeather',['isStormy']);
@@ -46,7 +45,7 @@ describe('Traffic Controller', function(){
 
     it('Cannot land plane if it is not airborne', function(){
       expect( function(){ tc.land(groundedPlane,emptyAirport,goodWeather) } )
-      .toThrow("Plane not airborne");
+      .toThrow("This is not an airborne plane");
     });
 
     it('Cannot land if airport is full', function(){
@@ -56,8 +55,19 @@ describe('Traffic Controller', function(){
 
     it('Calls changeFlightStatus on landing plane', function() {
       tc.land(airbornePlane,emptyAirport,goodWeather)
-      expect(airbornePlane.changeFlightStatus()).toHaveBeenCalled()
+      expect(airbornePlane.changeFlightStatus).toHaveBeenCalled()
     })
+
+  });
+
+  describe('#takeOff', function(){
+    // trafficController.land(plane,airport,weather)
+
+    it('removes a plane from the hangar', function() {
+      emptyAirport.hangar.push(groundedPlane)
+      tc.takeOff(groundedPlane,emptyAirport,goodWeather)
+      expect(emptyAirport.hangar).not.toContain(groundedPlane)
+    });
 
   });
 
