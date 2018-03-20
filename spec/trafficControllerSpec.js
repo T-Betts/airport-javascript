@@ -1,7 +1,8 @@
 describe('Traffic Controller', function(){
   let tc;
-  let airbornePlane = {};
-  let groundedPlane = {};
+  let airbornePlane;
+  let groundedPlane;
+  let fullAirport;
   let emptyAirport;
   let goodWeather;
   let badWeather;
@@ -14,9 +15,16 @@ describe('Traffic Controller', function(){
     // airbornePlane.inFlight.and.returnValue(true);
     // groundedPlane = jasmine.createSpyObj('groundedPlane');
     // groundedPlane.inFlight.and.returnValue(false);
+    airbornePlane = jasmine.createSpyObj('airborneAirport',['changeFlightStatus']);
+    // emptyAirport.hasSpace.and.returnValue(true)
     airbornePlane.inFlight = true
+    groundedPlane = jasmine.createSpyObj('groundedAirport',['changeFlightStatus']);
     groundedPlane.inFlight = false
-    emptyAirport = new Airport
+    emptyAirport = jasmine.createSpyObj('emptyAirport',['hasSpace']);
+    emptyAirport.hasSpace.and.returnValue(true);
+    emptyAirport.hangar = []
+    fullAirport = jasmine.createSpyObj('fullAirport',['hasSpace']);
+    fullAirport.hasSpace.and.returnValue(false);
     goodWeather = jasmine.createSpyObj('goodWeather',['isStormy']);
     goodWeather.isStormy.and.returnValue(false);
     badWeather = jasmine.createSpyObj('badWeather',['isStormy']);
@@ -42,9 +50,14 @@ describe('Traffic Controller', function(){
     });
 
     it('Cannot land if airport is full', function(){
-      expect( function(){ tc.land(groundedPlane,fullAirport,goodWeather) } )
+      expect( function(){ tc.land(airbornePlane,fullAirport,goodWeather) } )
       .toThrow("Airport is full");
     });
+
+    it('Calls changeFlightStatus on landing plane', function() {
+      tc.land(airbornePlane,emptyAirport,goodWeather)
+      expect(airbornePlane.changeFlightStatus()).toHaveBeenCalled()
+    })
 
   });
 
