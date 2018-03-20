@@ -101,6 +101,21 @@ describe('Traffic Controller', function(){
     it('returns the correct plane', function() {
       expect(tc.takeOff(groundedPlaneTwo,fullAirport,goodWeather)).toEqual(groundedPlaneTwo)
     })
+
+    it('Cannot take off in bad weather', function() {
+      expect( function(){ tc.takeOff(groundedPlaneTwo,fullAirport,badWeather) } )
+      .toThrow("Cannot take off in bad weather");
+    });
+
+    it('Plane must be in airport', function() {
+      expect( function(){ tc.takeOff(groundedPlaneThree,fullAirport,badWeather) } )
+      .toThrow("Plane is not in this airport");
+    })
+
+    it('Calls changeFlightStatus on departing plane', function() {
+      tc.takeOff(groundedPlaneTwo,fullAirport,goodWeather)
+      expect(groundPlaneTwo.changeFlightStatus).toHaveBeenCalled()
+    })
   });
 
 });
