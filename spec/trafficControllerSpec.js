@@ -34,12 +34,17 @@ describe('Traffic Controller', function(){
     it('Cannot land a plane in bad weather', function() {
       expect( function(){ tc.land(airbornePlane,emptyAirport,badWeather) } )
       .toThrow("Cannot land in bad weather");
-    })
+    });
 
     it('Cannot land plane if it is not airborne', function(){
       expect( function(){ tc.land(groundedPlane,emptyAirport,goodWeather) } )
       .toThrow("Plane not airborne");
-    })
+    });
+
+    it('Cannot land if airport is full', function(){
+      expect( function(){ tc.land(groundedPlane,fullAirport,goodWeather) } )
+      .toThrow("Airport is full");
+    });
 
   });
 
