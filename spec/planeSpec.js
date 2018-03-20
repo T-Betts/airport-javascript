@@ -11,7 +11,7 @@ describe('Plane', function(){
       plane = new Plane
       plane.changeFlightStatus()
       expect(plane.inFlight).toBe(false)
-    });
+    })
     it('should change inFlight from true to false', function(){
       plane = new Plane
       plane.changeFlightStatus()
