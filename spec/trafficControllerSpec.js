@@ -7,7 +7,10 @@ describe('Traffic Controller', function(){
 
   beforeEach(function(){
     tc = new TrafficController
-    airbornePlane = new Plane
+    airbornePlane = jasmine.createSpyObj('airbornePlane',['inFlight']);
+    goodWeather.inFlight.and.returnValue(true);
+    groundedPlane = jasmine.createSpyObj('groundedPlane',['inFlight']);
+    goodWeather.inFlight.and.returnValue(false);
     emptyAirport = new Airport
     goodWeather = jasmine.createSpyObj('goodWeather',['isStormy']);
     goodWeather.isStormy.and.returnValue(false);
@@ -25,7 +28,12 @@ describe('Traffic Controller', function(){
 
     it('Cannot land a plane in bad weather', function() {
       expect( function(){ tc.land(airbornePlane,emptyAirport,badWeather) } )
-      .toThrow(new Error("Cannot land in bad weather"));
+      .toThrow("Cannot land in bad weather");
+    })
+
+    it('Cannot land plane if it is not airborne', function(){
+      expect( function(){ tc.land(groundedPlane,emptyAirport,goodWeather) } )
+      .toThrow("Plane not airborne");
     })
 
   });

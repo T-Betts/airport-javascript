@@ -1,5 +1,10 @@
 function TrafficController() {}
 
 TrafficController.prototype.land = function(plane,airport,weather) {
-  airport.hangar.push(plane)
+  if (!weather.isStormy()){
+    airport.hangar.push(plane)
+  }
+  else{
+    throw "Cannot land in bad weather"
+  }
 }
