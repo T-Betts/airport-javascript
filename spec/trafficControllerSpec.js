@@ -1,16 +1,21 @@
 describe('Traffic Controller', function(){
   let tc;
   let airbornePlane;
+  airbornePlane.inFlight = 0
+  let groundedPlane;
+  groundedPlane.inFlight = 0
   let emptyAirport;
   let goodWeather;
   let badWeather;
 
   beforeEach(function(){
     tc = new TrafficController
-    airbornePlane = jasmine.createSpyObj('airbornePlane',['inFlight']);
-    goodWeather.inFlight.and.returnValue(true);
-    groundedPlane = jasmine.createSpyObj('groundedPlane',['inFlight']);
-    goodWeather.inFlight.and.returnValue(false);
+    spyOnProperty(airbornePlane, 'inFlight', 'getter').and.returnValue(true);
+    spyOnProperty(groundedPlane, 'inFlight', 'getter').and.returnValue(false);
+    // airbornePlane = jasmine.createSpyObj('airbornePlane');
+    // airbornePlane.inFlight.and.returnValue(true);
+    // groundedPlane = jasmine.createSpyObj('groundedPlane');
+    // groundedPlane.inFlight.and.returnValue(false);
     emptyAirport = new Airport
     goodWeather = jasmine.createSpyObj('goodWeather',['isStormy']);
     goodWeather.isStormy.and.returnValue(false);
