@@ -6,6 +6,7 @@ describe('Traffic Controller', function(){
   let groundedPlaneThree;
   let fullAirport;
   let emptyAirport;
+  let airportWithoutPlane;
   let goodWeather;
   let badWeather;
 
@@ -17,17 +18,37 @@ describe('Traffic Controller', function(){
     airbornePlane.inFlight = true;
     groundedPlane = jasmine.createSpyObj('groundedPlane',['changeFlightStatus']);
     groundedPlane.inFlight = false;
+    groundedPlane.name = 'one';
     groundedPlaneTwo = jasmine.createSpyObj('groundedPlaneTwo',['changeFlightStatus']);
     groundedPlaneTwo.inFlight = false;
+    groundedPlaneTwo.name = 'two';
     groundedPlaneThree = jasmine.createSpyObj('groundedPlaneThree',['changeFlightStatus']);
     groundedPlaneThree.inFlight = false;
+    groundedPlaneThree.name = 'three';
 
     //airports
-    emptyAirport = jasmine.createSpyObj('emptyAirport',['hasSpace']);
+    emptyAirport = jasmine.createSpyObj('emptyAirport',['hasSpace','hasPlane']);
     emptyAirport.hasSpace.and.returnValue(true);
+    emptyAirport.hasPlane.and.returnValue(1);
     emptyAirport.hangar = [];
-    fullAirport = jasmine.createSpyObj('fullAirport',['hasSpace']);
+    airportWithoutPlane = jasmine.createSpyObj('emptyAirport',['hasSpace','hasPlane']);
+    airportWithoutPlane.hasPlane.and.returnValue(false);
+    airportWithoutPlane.hangar = [];
+    fullAirport = jasmine.createSpyObj('fullAirport',['hasSpace','hasPlane']);
     fullAirport.hasSpace.and.returnValue(false);
+    fullAirport.hasPlane.and.returnValue(4);
+    fullAirport.hangar = [
+      groundedPlane,
+      groundedPlane,
+      groundedPlane,
+      groundedPlane,
+      groundedPlaneTwo,
+      groundedPlane,
+      groundedPlane,
+      groundedPlane,
+      groundedPlane,
+      groundedPlane
+    ];
 
     //weather
     goodWeather = jasmine.createSpyObj('goodWeather',['isStormy']);
@@ -73,15 +94,12 @@ describe('Traffic Controller', function(){
       emptyAirport.hangar.push(groundedPlane)
       emptyAirport.hangar.push(groundedPlaneTwo)
       emptyAirport.hangar.push(groundedPlaneThree)
-      tc.takeOff(groundedPlane,emptyAirport,goodWeather)
-      expect(emptyAirport.hangar).not.toContain(groundedPlane)
+      tc.takeOff(groundedPlaneTwo,emptyAirport,goodWeather)
+      expect(emptyAirport.hangar).not.toContain(groundedPlaneTwo)
     });
 
     it('returns the correct plane', function() {
-      emptyAirport.hangar.push(groundedPlane)
-      emptyAirport.hangar.push(groundedPlaneTwo)
-      emptyAirport.hangar.push(groundedPlaneThree)
-      expect(tc.takeOff(groundedPlaneTwo,emptyAirport,goodWeather)).toEqual(groundedPlaneTwo)
+      expect(tc.takeOff(groundedPlaneTwo,fullAirport,goodWeather)).toEqual(groundedPlaneTwo)
     })
   });
 

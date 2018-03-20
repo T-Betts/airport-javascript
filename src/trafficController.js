@@ -14,6 +14,6 @@ TrafficController.prototype.land = function(plane,airport,weather) {
 }
 
 TrafficController.prototype.takeOff = function(plane,airport,weather) {
-  index = airport.hasPlane
-  airport.hangar.splice(index, 1)
+  index = airport.hasPlane()
+  return airport.hangar.splice(index, 1)[0]
 }
