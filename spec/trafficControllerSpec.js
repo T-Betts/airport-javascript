@@ -2,6 +2,8 @@ describe('Traffic Controller', function(){
   let tc;
   let airbornePlane;
   let groundedPlane;
+  let groundedPlaneTwo;
+  let groundedPlaneThree;
   let fullAirport;
   let emptyAirport;
   let goodWeather;
@@ -11,10 +13,14 @@ describe('Traffic Controller', function(){
     tc = new TrafficController
 
     //planes
-    airbornePlane = jasmine.createSpyObj('airborneAirport',['changeFlightStatus']);
+    airbornePlane = jasmine.createSpyObj('airbornePlane',['changeFlightStatus']);
     airbornePlane.inFlight = true;
-    groundedPlane = jasmine.createSpyObj('groundedAirport',['changeFlightStatus']);
+    groundedPlane = jasmine.createSpyObj('groundedPlane',['changeFlightStatus']);
     groundedPlane.inFlight = false;
+    groundedPlaneTwo = jasmine.createSpyObj('groundedPlaneTwo',['changeFlightStatus']);
+    groundedPlaneTwo.inFlight = false;
+    groundedPlaneThree = jasmine.createSpyObj('groundedPlaneThree',['changeFlightStatus']);
+    groundedPlaneThree.inFlight = false;
 
     //airports
     emptyAirport = jasmine.createSpyObj('emptyAirport',['hasSpace']);
@@ -63,12 +69,20 @@ describe('Traffic Controller', function(){
   describe('#takeOff', function(){
     // trafficController.land(plane,airport,weather)
 
-    it('removes a plane from the hangar', function() {
+    it('removes correct plane from the hangar', function() {
       emptyAirport.hangar.push(groundedPlane)
+      emptyAirport.hangar.push(groundedPlaneTwo)
+      emptyAirport.hangar.push(groundedPlaneThree)
       tc.takeOff(groundedPlane,emptyAirport,goodWeather)
       expect(emptyAirport.hangar).not.toContain(groundedPlane)
     });
 
+    it('returns the correct plane', function() {
+      emptyAirport.hangar.push(groundedPlane)
+      emptyAirport.hangar.push(groundedPlaneTwo)
+      emptyAirport.hangar.push(groundedPlaneThree)
+      expect(tc.takeOff(groundedPlaneTwo,emptyAirport,goodWeather)).toEqual(groundedPlaneTwo)
+    })
   });
 
 });
