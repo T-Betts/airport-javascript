@@ -108,13 +108,13 @@ describe('Traffic Controller', function(){
     });
 
     it('Plane must be in airport', function() {
-      expect( function(){ tc.takeOff(groundedPlaneThree,fullAirport,badWeather) } )
+      expect( function(){ tc.takeOff(groundedPlaneThree,airportWithoutPlane,goodWeather) } )
       .toThrow("Plane is not in this airport");
     })
 
     it('Calls changeFlightStatus on departing plane', function() {
       tc.takeOff(groundedPlaneTwo,fullAirport,goodWeather)
-      expect(groundPlaneTwo.changeFlightStatus).toHaveBeenCalled()
+      expect(groundedPlaneTwo.changeFlightStatus).toHaveBeenCalled()
     })
   });
 
